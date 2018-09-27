@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.mytt.api.dao.CategoryDao">
+    <sql id="selectTbContentCategoryColumns">
+        a.id,
+        a.parent_id,
+        a.name,
+        a.address,
+        a.status,
+        a.sort_order,
+        a.is_parent,
+        a.created,
+        a.updated,
+        IFNULL(b.id,'0') AS 'parentCategory.id',
+        IFNULL(b.name,'/') AS 'parentCategory.name'
+    </sql>
+
+    <sql id="joinTbContentCategory">
+        LEFT JOIN tb_content_category AS b ON a.parent_id = b.id
+    </sql>
+
+    <select id="get" resultType="TbContentCategory">
+        SELECT
+        <include refid="selectTbContentCategoryColumns"/>
+        FROM
+        tb_content_category AS a
+        <include refid="joinTbContentCategory" />
+        WHERE
+        a.id = #{id} AND a.status = 1
+    </select>
+
+    <select id="selectAll" resultType="TbContentCategory">
+        SELECT
+        <include refid="selectTbContentCategoryColumns"/>
+        FROM tb_content_category AS a
+        <include refid="joinTbContentCategory" />
+        <where>
+            <if test="name != null and name != ''">
+                AND a.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+        </where>
+        WHERE a.status = 1
+        ORDER BY a.parent_id ASC, a.sort_order ASC
+    </select>
+
+    <select id="selectByPid" resultType="TbContentCategory">
+        SELECT
+        <include refid="selectTbContentCategoryColumns"/>
+        FROM tb_content_category AS a
+        <include refid="joinTbContentCategory" />
+        WHERE a.parent_id = #{parentCategory.id} AND a.status = 1
+        ORDER BY a.parent_id ASC, a.sort_order ASC
+    </select>
+
+    <select id="countByPid" resultType="Integer">
+        SELECT COUNT(*) FROM tb_content_category WHERE parent_id = #{parentCategory.id}
+    </select>
+
+    <insert id="insert" parameterType="TbContentCategory">
+        INSERT INTO tb_content_category (
+          parent_id,
+          name,
+          address,
+          status,
+          sort_order,
+          is_parent,
+          created,
+          updated
+        )
+        VALUES
+          (
+            #{parentCategory.id},
+            #{name},
+            #{address},
+            #{status},
+            #{sortOrder},
+            #{isParent},
+            #{created},
+            #{updated}
+          )
+    </insert>
+
+    <update id="update" parameterType="TbContentCategory">
+        UPDATE
+           tb_content_category
+        SET
+           parent_id = #{parentCategory.id},
+           name = #{name},
+           address = #{address},
+           status = #{status},
+           sort_order = #{sortOrder},
+           is_parent = #{isParent},
+           created = #{created},
+           updated = #{updated}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete" parameterType="TbContentCategory">
+        UPDATE
+           tb_content_category
+        SET
+            status = 0
+        WHERE id = #{id} OR parent_id = #{id}
+    </update>
+
+    <select id="getByAddress" resultType="TbContentCategory">
+        SELECT
+        <include refid="selectTbContentCategoryColumns"/>
+        FROM tb_content_category AS a
+        <include refid="joinTbContentCategory" />
+        WHERE a.address = #{address} AND a.status = 1
+    </select>
+</mapper>
