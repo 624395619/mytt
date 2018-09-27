@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/mytt.iml" filepath="$PROJECT_DIR$/mytt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mytt-admin/mytt-admin.iml" filepath="$PROJECT_DIR$/mytt-admin/mytt-admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mytt-api/mytt-api.iml" filepath="$PROJECT_DIR$/mytt-api/mytt-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mytt-common/mytt-common.iml" filepath="$PROJECT_DIR$/mytt-common/mytt-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mytt-dependecs/mytt-dependecs.iml" filepath="$PROJECT_DIR$/mytt-dependecs/mytt-dependecs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mytt-domain/mytt-domain.iml" filepath="$PROJECT_DIR$/mytt-domain/mytt-domain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mytt-ui/mytt-ui.iml" filepath="$PROJECT_DIR$/mytt-ui/mytt-ui.iml" />
+    </modules>
+  </component>
+</project>
