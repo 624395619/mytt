@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.mytt.api.dao.TbContentDao">
+    <sql id="selectTbContentColumns">
+        a.id,
+        a.author_id,
+        a.category_id,
+        a.title,
+        a.content,
+        a.url,
+        a.coverPic,
+        a.tagInfo,
+        a.created,
+        a.updated,
+        b.id AS "tbUser.id",
+       b.username AS "tbUser.username",
+       c.id AS "tbContentCategory.id",
+       c.name AS "tbContentCategory.name"
+    </sql>
+
+    <sql id="JoinSql">
+        LEFT JOIN tb_user AS b  ON a.author_id = b.id
+         LEFT JOIN tb_content_category AS c  ON a.category_id = c.id
+    </sql>
+
+    <select id="get" resultType="TbContent">
+        SELECT
+        <include refid="selectTbContentColumns"/>
+        FROM
+          tb_content AS a
+        <include refid="JoinSql"/>
+        WHERE
+          a.id = #{id}
+    </select>
+
+    <select id="selectContentByCategoryId" resultType="TbContent">
+        SELECT
+        <include refid="selectTbContentColumns" />
+        FROM
+        tb_content AS a
+        <include refid="JoinSql"/>
+        WHERE
+        a.category_id = #{tbContentCategory.id}
+    </select>
+
+    <select id="selectContentBytagInfo" resultType="TbContent">
+        SELECT
+        <include refid="selectTbContentColumns" />
+        FROM
+        tb_content AS a
+        <include refid="JoinSql"/>
+        <where>
+            <if test="tagInfo!=null and tagInfo!=''">
+                a.tagInfo like concat('%',#{tagInfo},'%')
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectContentByAuthorId" resultType="TbContent">
+        SELECT
+        <include refid="selectTbContentColumns" />
+        FROM
+        tb_content AS a
+        <include refid="JoinSql"/>
+        WHERE
+        a.author_id = #{tbUser.id}
+    </select>
+
+
+    <select id="selectContentByTitle" resultType="TbContent">
+        SELECT
+        <include refid="selectTbContentColumns" />
+        FROM
+        tb_content AS a
+        <include refid="JoinSql"/>
+        <where>
+            <if test="title!=null and title!=''">
+                a.title like concat('%',#{title},'%')
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

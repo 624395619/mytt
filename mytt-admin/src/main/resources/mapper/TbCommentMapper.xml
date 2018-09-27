@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.mytt.admin.dao.TbCommentDao">
+    <sql id="selectTbCommentColumns">
+      a.id,
+      a.user_id ,
+      a.status,
+      a.com_content,
+      a.praise_num,
+      a.created,
+      a.updated,
+      a.content_id,
+      b.id AS "tbUser.id",
+      b.username AS "tbUser.username",
+     c.id AS "tbContent.id",
+    c.title AS "tbContent.title"
+    </sql>
+
+   <sql id="JoinSql">
+        LEFT JOIN tb_user AS b  ON a.user_id = b.id
+         LEFT JOIN tb_content AS c  ON a.content_id = c.id
+    </sql>
+
+    <select id="selectAll" resultType="TbContent">
+        SELECT
+        <include refid="selectTbCommentColumns"/>
+        FROM
+        tb_comment AS a
+        <include refid="JoinSql"/>
+    </select>
+
+    <select id="getTotalCount" resultType="int">
+        SELECT
+        count(a.id)
+        FROM
+        tb_comment AS a
+        <include refid="JoinSql"/>
+        <where>
+            <if test="comContent!=null and comContent!=''">
+                a.com_content like concat('%',#{comContent},'%')
+            </if>
+            <if test="praiseNum!=null and praiseNum!=''">
+                a.praise_num >= #{praiseNum}
+            </if>
+            <if test="status!=null and status!=''">
+                a.status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPageList"  resultType="tbComment">
+        SELECT
+        <include refid="selectTbCommentColumns"/>
+        FROM
+        tb_comment AS a
+        <include refid="JoinSql"/>
+        <where>
+            <if test="tbContent !=null and tbContent!=''">
+              a.content_id = #{tbContent.id}
+            </if>
+
+        </where>
+        limit #{start},#{length}
+    </select>
+
+<!--    <select id="dataTable" resultType="tbComment" >
+        SELECT
+        <include refid="selectAll"/>
+        FROM
+        tb_content AS a
+        <include refid="JoinContentCategory"/>
+        <where>
+            <if test="title != null and title != '' ">
+                AND title LIKE CONCAT('%',#{title},'%')
+            </if>
+        </where>
+        limit #{start},#{length}
+    </select>-->
+
+    <insert id="insert">
+        INSERT INTO tb_comment (
+      user_id ,
+      status,
+      com_content,
+      praise_num,
+      created,
+      updated,
+      content_id
+        )
+        VALUES
+        (
+       #{tbUser.id},
+       #{status},
+       #{comContent},
+       #{praiseNum},
+       #{created},
+       #{updated},
+       #{tbContent.id}
+        )
+    </insert>
+
+  <delete id="delete">
+        DELETE FROM  tb_comment WHERE id= #{id};
+    </delete>
+
+
+    <select id="getById" resultType="tbComment" >
+        SELECT
+        <include refid="selectTbCommentColumns"/>
+        FROM
+        tb_comment AS a
+        <include refid="JoinSql"/>
+        WHERE
+        a.id =#{id};
+    </select>
+
+    <update id="update">
+        UPDATE
+        tb_comment
+        SET
+        status=#{status},
+        com_content=#{comContent},
+        updated=#{updated}
+        where
+        id=#{id}
+    </update>
+<!--    <delete id="deleteMultiList">
+        DELETE FROM tb_content
+        WHERE id IN
+        <if test="list != null and list.size  > 0">
+            <foreach collection="list" open="(" close=")" item="id" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </delete>-->
+    <delete id="deleteAll">
+        DELETE FROM tb_comment
+        WHERE id IN
+        <if test="array != null and array.length > 0">
+            <foreach collection="array" open="(" close=")" item="id" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </delete>
+
+  <!--    <select id="count" resultType="Integer">
+        SELECT COUNT(*)
+        FROM tb_content AS a
+        <include refid="JoinContentCategory"/>
+        <where>
+            <if test="title != null and title != '' ">
+                AND title LIKE CONCAT('%',#{title},'%')
+            </if>
+        </where>
+    </select>
+
+
+
+-->
+</mapper>

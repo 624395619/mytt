@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/mytt-admin" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mytt-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mytt-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mytt-dependecs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mytt-domain" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mytt-ui" charset="UTF-8" />
+  </component>
+</project>

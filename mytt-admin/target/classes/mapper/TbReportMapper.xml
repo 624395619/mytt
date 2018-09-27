@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.mytt.admin.dao.TbReportDao">
+    <sql id="selectTbReportColumns">
+      a.id,
+      a.report_user_id,
+      a.toreport_user_id,
+      a.comment_id,
+      a.report_content,
+      a.is_deal,
+      a.created,
+      a.updated,
+      b.id AS "reporter.id",
+      b.username AS "reporter.username",
+      c.id AS "toReporter.id",
+      c.username AS "toReporter.username",
+         d.id AS "tbComment.id"
+    </sql>
+
+   <sql id="JoinSql">
+        LEFT JOIN tb_user AS b  ON a.report_user_id = b.id
+         LEFT JOIN tb_user AS c  ON a.toreport_user_id = c.id
+         LEFT JOIN tb_comment AS d  ON a.comment_id = d.id
+    </sql>
+
+    <select id="selectAll" resultType="TbReport">
+        SELECT
+        <include refid="selectTbReportColumns"/>
+        FROM
+        tb_report AS a
+        <include refid="JoinSql"/>
+    </select>
+
+    <select id="getTotalCount" resultType="int">
+        SELECT
+        count(a.id)
+        FROM
+        tb_report AS a
+        <include refid="JoinSql"/>
+        <where>
+            <if test="reportContent!=null and reportContent!=''">
+                a.report_content like concat('%',#{reportContent},'%')
+            </if>
+
+            <if test="isDeal!=null and isDeal!='' || isDeal == 0 ">
+                a.is_deal like concat('%',#{isDeal},'%')
+            </if>
+
+        </where>
+    </select>
+
+    <select id="selectPageList"  resultType="TbReport">
+        SELECT
+        <include refid="selectTbReportColumns"/>
+        FROM
+        tb_report AS a
+        <include refid="JoinSql"/>
+        <where>
+            <if test="reportContent!=null and reportContent!=''">
+                a.report_content like concat('%',#{reportContent},'%')
+            </if>
+
+            <if test="isDeal!=null and isDeal!=''">
+
+                a.is_deal like concat('%',#{isDeal},'%')
+            </if>
+
+        </where>
+        limit #{start},#{length}
+    </select>
+
+<!--    <select id="dataTable" resultType="tbComment" >
+        SELECT
+        <include refid="selectAll"/>
+        FROM
+        tb_content AS a
+        <include refid="JoinContentCategory"/>
+        <where>
+            <if test="title != null and title != '' ">
+                AND title LIKE CONCAT('%',#{title},'%')
+            </if>
+        </where>
+        limit #{start},#{length}
+    </select>-->
+
+    <insert id="insert">
+        INSERT INTO tb_report (
+       report_user_id,
+       toreport_user_id,
+       comment_id,
+       report_content,
+       is_deal,
+       created,
+       updated
+        )
+        VALUES
+        (
+       #{reporter.id},
+       #{toReporter.id},
+       #{tbComment.id},
+       #{reportContent},
+        #{isDeal},
+       #{created},
+       #{updated}
+        )
+    </insert>
+
+  <delete id="delete">
+        DELETE FROM  tb_report WHERE id= #{id};
+    </delete>
+
+
+    <select id="getById" resultType="TbReport" >
+        SELECT
+        <include refid="selectTbReportColumns"/>
+        FROM
+        tb_report AS a
+        <include refid="JoinSql"/>
+        WHERE
+        a.id =#{id};
+    </select>
+
+    <update id="update">
+        UPDATE
+        tb_report
+        SET
+       report_user_id=#{reporter.id},
+       toreport_user_id=#{toReporter.id},
+       comment_id = #{tbComment.id},
+       report_content= #{reportContent},
+       is_deal= #{isDeal}
+        WHERE
+        id=#{id}
+    </update>
+
+<!--    <delete id="deleteMultiList">
+        DELETE FROM tb_content
+        WHERE id IN
+        <if test="list != null and list.size  > 0">
+            <foreach collection="list" open="(" close=")" item="id" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </delete>-->
+    <delete id="deleteAll">
+        DELETE FROM tb_report
+        WHERE id IN
+        <if test="array != null and array.length > 0">
+            <foreach collection="array" open="(" close=")" item="id" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </delete>
+
+  <!--    <select id="count" resultType="Integer">
+        SELECT COUNT(*)
+        FROM tb_content AS a
+        <include refid="JoinContentCategory"/>
+        <where>
+            <if test="title != null and title != '' ">
+                AND title LIKE CONCAT('%',#{title},'%')
+            </if>
+        </where>
+    </select>
+
+
+
+-->
+</mapper>

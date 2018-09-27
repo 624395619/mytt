@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="mytt-admin" />
+        <module name="mytt-api" />
+        <module name="mytt-common" />
+        <module name="mytt-domain" />
+        <module name="mytt-ui" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="mytt" target="1.5" />
+      <module name="mytt-admin" target="1.8" />
+      <module name="mytt-api" target="1.8" />
+      <module name="mytt-common" target="1.8" />
+      <module name="mytt-dependecs" target="1.8" />
+      <module name="mytt-domain" target="1.8" />
+      <module name="mytt-ui" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
